@@ -1,0 +1,115 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+bool isSafe(int **arr, int x, int y, int n){
+    for(int row=0;row<x;row++){
+        if(arr[row][y]==1){
+            return false;
+        }
+    }
+
+    int row =x;
+    int col =y;
+    while(row>=0 && col>=0){
+        if(arr[row][col]==1){
+            return false;
+        }
+        row--;
+        col--;
+    }
+
+    row =x;
+    col =y;
+    while(row>=0 && col<n){
+        if(arr[row][col]==1){
+            return false;
+        }
+        row--;
+        col++;
+    }
+
+    return true;
+}
+
+bool nQueen(int** arr, int x, int n){
+
+    if(x>=n){
+        return true;
+    }
+
+    for(int col=0;col<n;col++){
+        if(isSafe(arr,x,col,n)){
+            arr[x][col]=1;
+            if(nQueen(arr,x+1,n)){
+                return true;
+            }
+            arr[x][col]=0;
+        }
+    }
+    return false;
+}
+
+
+int main(){
+    int n;
+    cin >> n;
+    
+    int **arr = new int*[n];    
+    for(int i=0;i<n;i++){
+        arr[i] = new int[n];
+        for(int j=0;j<n;j++){
+            arr[i][j]=0;
+        }
+    }
+
+    if(nQueen(arr,0,n)){
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                cout << arr[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+    return 0;
+}
+
+/*
+This C++ code solves the N-Queens problem using backtracking. Let's break it down step by step:
+
+1. **isSafe Function**: This function checks if it's safe to place a queen at position `(x, y)` on the chessboard represented by the 2D array `arr`. It checks three conditions:
+   - No queens in the same column above the current position `(x, y)`.
+   - No queens in the upper left diagonal (`row--` and `col--`).
+   - No queens in the upper right diagonal (`row--` and `col++`).
+
+2. **nQueen Function**: This is the recursive backtracking function to solve the N-Queens problem. It tries to place queens on each row starting from `x=0`. If it finds a safe position for the queen in the current row, it places the queen (`arr[x][col] = 1`) and recursively calls `nQueen` for the next row (`x+1`). If placing a queen in any column of the current row leads to a solution, it returns true; otherwise, it backtracks by resetting the position of the queen (`arr[x][col] = 0`) and tries the next column.
+
+3. **Main Function**: In the main function, the user inputs the value of `n`, which represents the size of the chessboard (n x n). It initializes a 2D array `arr` representing the chessboard and fills it with zeros. Then, it calls the `nQueen` function with the initial row index `x=0`. If `nQueen` returns true, it prints the resulting chessboard configuration with queens placed such that no two queens attack each other.
+
+Overall, this code efficiently solves the N-Queens problem using recursive backtracking. It's a classic example of how backtracking can be used to solve combinatorial problems.
+
+
+
+ex
+The N-Queens problem is a classic problem in combinatorial optimization and chessboard puzzles. The task is to place N queens on an N×N chessboard in such a way that no two queens threaten each other. In chess, a queen can move horizontally, vertically, or diagonally.
+
+The problem was first proposed in 1848 by the German chess player Max Bezzel and later independently published in 1850 by Franz Nauck. Since then, it has gained popularity as a challenging puzzle and a problem frequently used to demonstrate various problem-solving techniques.
+
+Here's how the problem is typically stated:
+
+Given an N×N chessboard, place N queens on the board in such a way that no two queens can attack each other. That is, no two queens should share the same row, column, or diagonal.
+
+For example, here is a solution for N = 4:
+
+```
+0  1  0  0
+0  0  0  1
+1  0  0  0
+0  0  1  0
+```
+
+In this solution:
+- Queens are represented by 1s.
+- Empty squares are represented by 0s.
+
+In the example solution, each row and column contains exactly one queen, and no two queens threaten each other diagonally. Therefore, it satisfies the conditions of the N-Queens problem.
+*/

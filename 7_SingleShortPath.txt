@@ -1,0 +1,82 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+#define INF INT_MAX
+
+vector<pair<int, int>> dijkstra(vector<vector<pair<int, int>>>& graph, int src) {
+    int V = graph.size();
+    vector<int> dist(V, INF);
+    vector<bool> visited(V, false);
+
+    dist[src] = 0;
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, src});
+
+    while (!pq.empty()) {
+        int u = pq.top().second;
+        pq.pop();
+
+        if (visited[u]) continue;
+        visited[u] = true;
+
+        for (auto& neighbor : graph[u]) {
+            int v = neighbor.first;
+            int weight = neighbor.second;
+
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    vector<pair<int, int>> shortest_paths;
+    for (int i = 0; i < V; ++i) {
+        shortest_paths.push_back({i, dist[i]});
+    }
+    return shortest_paths;
+}
+
+int main() {
+    // Input
+    int V = 5, E = 7; // Number of vertices and edges
+    vector<vector<pair<int, int>>> graph(V); // Graph representation
+
+    // Edges
+    vector<tuple<int, int, int>> edges = {
+        {0, 1, 4}, {0, 2, 1}, {1, 2, 2},
+        {1, 3, 5}, {2, 3, 2}, {2, 4, 4},
+        {3, 4, 1}
+    };
+
+    // Add edges to the graph
+    for (auto& edge : edges) {
+        int src, dest, weight;
+        tie(src, dest, weight) = edge;  
+        graph[src].push_back({dest, weight});
+    }
+
+    int src = 0; // Source vertex
+
+    // Compute shortest paths using Dijkstra's algorithm
+    vector<pair<int, int>> shortest_paths = dijkstra(graph, src);
+
+    // Output shortest distances
+    cout << "Shortest distances from vertex " << src << ":\n";
+    for (auto& path : shortest_paths) {
+        cout << "Vertex: " << path.first << ", Distance: ";
+        if (path.second == INF) cout << "INF\n";
+        else cout << path.second << "\n";
+    }
+
+    return 0;
+}
+
+
+The output of this program will be the shortest distances from the source vertex to all other vertices in the graph computed using Dijkstra's algorithm. Let's analyze the code:
+
+Graph Initialization: The program initializes a directed graph represented using an adjacency list. It sets the number of vertices V to 5 and adds edges with their corresponding weights.
+Dijkstra's Algorithm: The dijkstra function implements Dijkstra's algorithm to compute the shortest paths from the source vertex to all other vertices in the graph.
+Main Function: In the main function, the source vertex is set to 0. Then, Dijkstra's algorithm is called to compute the shortest paths.
+Output: After computing the shortest paths, the program outputs the shortest distances from the source vertex to all other vertices.

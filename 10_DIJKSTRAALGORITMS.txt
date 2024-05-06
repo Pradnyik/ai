@@ -1,0 +1,155 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define INF INT_MAX
+
+vector<pair<int, int>> dijkstra(vector<vector<pair<int, int>>>& graph, int src) {
+    int V = graph.size();
+    vector<int> dist(V, INF);
+    vector<bool> visited(V, false);
+
+    dist[src] = 0;
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, src});
+
+    while (!pq.empty()) {
+        int u = pq.top().second;
+        pq.pop();
+
+        if (visited[u]) continue;
+        visited[u] = true;
+
+        for (auto& neighbor : graph[u]) {
+            int v = neighbor.first;
+            int weight = neighbor.second;
+
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    vector<pair<int, int>> shortest_paths;
+    for (int i = 0; i < V; ++i) {
+        shortest_paths.push_back({i, dist[i]});
+    }
+    return shortest_paths;
+}
+
+int main() {
+    int V, E;
+    cout << "Enter number of vertices and edges: ";
+    cin >> V >> E;
+
+    vector<vector<pair<int, int>>> graph(V);
+
+    cout << "Enter source, destination, and weight for each edge:\n";
+    for (int i = 0; i < E; ++i) {
+        int src, dest, weight;
+        cin >> src >> dest >> weight;
+        graph[src].push_back({dest, weight});
+        graph[dest].push_back({src, weight}); // For undirected graph
+    }
+
+    int src;
+    cout << "Enter source vertex: ";
+    cin >> src;
+
+    vector<pair<int, int>> shortest_paths = dijkstra(graph, src);
+
+    cout << "Shortest distances from vertex " << src << ":\n";
+    for (auto& path : shortest_paths) {
+        cout << "Vertex: " << path.first << ", Distance: ";
+        if (path.second == INF) cout << "INF\n";
+        else cout << path.second << "\n";
+    }
+
+    return 0;
+}
+
+/*
+Enter number of vertices and edges: 6 9
+Enter source, destination, and weight for each edge:
+0 1 4
+0 2 1
+1 2 2
+1 3 5
+2 3 2
+2 4 4
+3 4 1
+3 5 3
+4 5 7
+Enter source vertex: 0
+Shortest distances from vertex 0:
+Vertex: 0, Distance: 0
+Vertex: 1, Distance: 3
+Vertex: 2, Distance: 1
+Vertex: 3, Distance: 3
+Vertex: 4, Distance: 4
+Vertex: 5, Distance: 6
+
+
+=== Code Execution Successful ===
+
+Certainly! Here's an explanation of the provided Dijkstra's algorithm implementation in C++:
+
+1. **Header Files and Macros:**
+   - `#include<bits/stdc++.h>`: This line includes a set of standard C++ libraries, allowing the program to use various functionalities like vectors, pairs, and priority queues.
+   - `using namespace std;`: This line is a directive that tells the compiler to use the `std` namespace, which includes standard C++ symbols.
+
+2. **Constants and Data Structures:**
+   - `#define INF INT_MAX`: This macro defines `INF` as the maximum integer value, representing infinity.
+   - `vector<pair<int, int>> dijkstra(vector<vector<pair<int, int>>>& graph, int src)`: This function takes the graph representation and the source vertex as input and returns the shortest paths from the source vertex to all other vertices.
+
+3. **Dijkstra's Algorithm Implementation:**
+   - The function initializes a vector `dist` to store the distances from the source vertex to all other vertices. Initially, all distances are set to infinity.
+   - It also initializes a vector `visited` to keep track of visited vertices.
+   - The distance from the source vertex to itself is set to 0.
+   - A priority queue `pq` is used to select the next vertex to explore. It stores pairs of `(distance, vertex)` with the minimum distance at the front.
+   - The algorithm iterates until the priority queue is empty:
+     - It pops the vertex `u` with the smallest distance from the priority queue.
+     - If `u` has already been visited, it continues to the next iteration.
+     - Otherwise, it marks `u` as visited and explores its neighbors.
+     - For each neighbor `v`, if the distance from `src` to `v` through `u` is shorter than the current distance to `v`, the distance is updated, and `v` is pushed into the priority queue.
+   - Finally, the function constructs and returns a vector `shortest_paths` containing pairs of vertex and its shortest distance from the source.
+
+4. **Main Function:**
+   - It prompts the user to input the number of vertices and edges in the graph.
+   - It creates an adjacency list representation of the graph using a vector of vectors.
+   - It prompts the user to input the source vertex.
+   - It calls the `dijkstra` function to compute the shortest paths from the given source vertex.
+   - It prints the shortest distances from the source vertex to all other vertices.
+
+5. **Input and Output:**
+   - The input consists of the number of vertices, edges, and edge weights.
+   - The output displays the shortest distances from the specified source vertex to all other vertices in the graph.
+
+Overall, this code demonstrates the Dijkstra's algorithm for finding the shortest paths in a weighted graph efficiently.
+
+ex
+Dijkstra's algorithm is a graph search algorithm used to find the shortest path from a source vertex to all other vertices in a weighted graph. It's similar to Prim's algorithm, but it focuses on finding the shortest path instead of constructing a minimum spanning tree.
+
+Here's a step-by-step overview of Dijkstra's algorithm:
+
+1. **Initialization:**
+   - Assign a distance value to every vertex in the graph. Initialize the distance of the source vertex to 0 and all other vertices to infinity.
+   - Maintain a set of vertices whose shortest distance from the source vertex is already known. Initially, this set is empty.
+
+2. **Main Loop:**
+   - Repeat the following steps until all vertices have been processed:
+     - Select the vertex `u` from the set of vertices whose distance is not yet finalized and has the minimum distance.
+     - Mark `u` as visited and add it to the set of visited vertices.
+     - For each neighbor `v` of `u` that has not been visited:
+       - Update the distance of `v` by considering the distance from the source vertex to `u` plus the weight of the edge `(u, v)`.
+       - If the updated distance of `v` is less than its current distance, update the distance value.
+  
+3. **Termination:**
+   - After processing all vertices, the algorithm terminates, and the shortest distance from the source vertex to every other vertex is known.
+
+4. **Output:**
+   - The shortest path from the source vertex to any other vertex can be reconstructed by following the path of minimum distances recorded during the algorithm's execution.
+
+In summary, Dijkstra's algorithm efficiently computes the shortest paths in a weighted graph by iteratively selecting the vertex with the smallest distance from the source and updating the distances of its neighbors. It ensures that the shortest path to each vertex is discovered progressively, providing an optimal solution for single-source shortest path problems.
+*/

@@ -1,0 +1,140 @@
+import nltk
+from nltk.chat.util import Chat, reflections
+
+pairs=[
+    #
+    [
+        r"my name is (.)",
+        ["Hello %1, How are you"]
+    ],
+    # Or expression
+    [
+        r"Hi|Hello|Hey there|Hola",
+        ["Hello my name is Hiesenberg"]
+    ],
+    [
+        r"what is your name ?",
+        ["I am a bot created by Heisenbergwhat. you can call me crazy!",]
+    ],
+    [
+        r"how are you ?",
+        ["I'm doing good How about You ?",]
+    ],
+    [
+        r"sorry (.*)",
+        ["Its alright","Its OK, never mind",]
+    ],
+    [
+        r"I am fine",
+        ["Great to hear that, How can I help you?",]
+    ],
+    [
+        r"I (.*) good",
+        ["Nice to hear that","How can I help you?:)",]
+    ],
+    [
+        r"(.*) age?",
+        ["I'm a computer program dude Seriously you are asking me this?",]
+    ],
+    [
+        r"what (.*) want ?",
+        ["Make me an offer I can't refuse",]
+    ],
+    [
+        r"(.*) created ?",
+        ["Raghav created me using Python's NLTK library ","top secret ;)",]
+    ],
+    [
+        r"(.*) (location|city) ?",
+        ['Indore, Madhya Pradesh',]
+    ],
+    [
+        r"how is weather in (.*)?",
+        ["Weather in %1 is awesome like always","Too hot man here in %1","Too cold man here in %1","Never even heard about %1"]
+    ],
+    [
+        r"i work in (.*)?",
+        ["%1 is an Amazing company, I have heard about it. But they are in huge loss these days.",]
+    ],
+    [
+        r"(.*)raining in (.*)",
+        ["No rain since last week here in %2","Damn its raining too much here in %2"]
+    ],
+    [
+        r"how (.*) health(.*)",
+        ["I'm a computer program, so I'm always healthy ",]
+    ],
+    [
+        r"(.*) (sports|game) ?",
+        ["I'm a very big fan of Football",]
+    ],
+    [
+        r"who (.*) sportsperson ?",
+        ["Messy","Ronaldo","Roony"]
+    ],
+    [
+        r"who (.*) (moviestar|actor)?",
+        ["Brad Pitt"]
+    ],
+    [
+        r"i am looking for online guides and courses to learn data science, can you suggest?",
+        ["Crazy_Tech has many great articles with each step explanation along with code, you can explore"]
+    ],
+    [
+        r"quit",
+        ["Thank you for using our intelligence services"]
+    ],
+    
+
+]
+
+def chat():
+    print("Hey there! I am Heisenberg at your service")
+    chat = Chat(pairs)
+    chat.converse()
+
+if __name__== "__main__":
+    chat()
+"""
+This is a simple chatbot program implemented using the NLTK library in Python. It uses regular expressions to match patterns in user input and respond accordingly. Let me explain the different parts:
+
+1. **Importing Libraries**: The code starts by importing the necessary libraries. `nltk` is the Natural Language Toolkit, and `Chat` and `reflections` are utilities provided by NLTK for building chatbots.
+
+2. **Pairs**: The `pairs` variable contains a list of patterns and responses. Each pattern-response pair represents a rule for the chatbot to follow. The pattern is a regular expression that matches user input, and the response is what the chatbot should reply with if the pattern matches.
+
+3. **Chat Function**: The `chat()` function initializes a chatbot using the `Chat` class from NLTK. It then starts the conversation loop using the `converse()` method. Within this loop, the chatbot waits for user input, matches it against the defined patterns, and responds accordingly.
+
+4. **Main Function**: The `main()` function calls the `chat()` function when the script is executed directly.
+
+5. **Execution**: When you run this script, it will greet you with a message and then wait for your input. You can then interact with the chatbot by typing messages, and it will respond based on the defined patterns and responses.
+
+Overall, this script demonstrates a basic implementation of a rule-based chatbot using NLTK, where responses are predefined based on patterns in the user's input.
+
+
+
+
+ex
+A chatbot is a computer program or an artificial intelligence (AI) system designed to simulate conversation with human users, typically through text-based or voice-based interactions. Chatbots are often used in various applications, including customer service, information retrieval, entertainment, and personal assistance. They use natural language processing (NLP) techniques to understand user input and generate appropriate responses. Chatbots can be simple rule-based systems or more complex AI models capable of learning and adapting to user interactions over time.
+
+
+alternate
+def simple_chatbot():
+    print("Hey there! I am Heisenberg at your service")
+    while True:
+        user_input = input("You: ").lower()
+        if "hi" in user_input or "hello" in user_input or "hey" in user_input or "hola" in user_input:
+            print("Bot: Hello, my name is Heisenberg")
+        elif "what is your name" in user_input:
+            print("Bot: I am a bot created by Heisenberg. You can call me crazy!")
+        elif "how are you" in user_input:
+            print("Bot: I'm doing good. How about you?")
+        elif "quit" in user_input:
+            print("Bot: Thank you for using our intelligence services")
+            break
+        else:
+            print("Bot: Sorry, I didn't understand that.")
+            
+if __name__ == "__main__":
+    simple_chatbot()
+
+"""

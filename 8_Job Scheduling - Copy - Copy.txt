@@ -1,0 +1,152 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+// Structure to represent each job
+struct Job {
+    char id; // Job ID
+    int deadline; // Deadline of the job
+    int profit; // Profit of the job
+};
+
+// Function to compare two jobs based on their profits
+bool compare(Job a, Job b) {
+    return (a.profit > b.profit);
+}
+
+// Function to schedule jobs to maximize profit
+void jobScheduling(vector<Job>& jobs) {
+    // Sort jobs in decreasing order of profit
+    sort(jobs.begin(), jobs.end(), compare);
+
+    int maxDeadline = 0;
+    for (auto& job : jobs) {
+        maxDeadline = max(maxDeadline, job.deadline);
+    }
+
+    vector<char> result(maxDeadline, '-'); // Stores the result of scheduled jobs
+    vector<bool> slot(maxDeadline, false); // Stores availability of time slots
+
+    // Fill result vector by iterating through each job
+    for (auto& job : jobs) {
+        // Find a suitable time slot for the job
+        for (int i = min(job.deadline - 1, maxDeadline - 1); i >= 0; i--) {
+            if (!slot[i]) {
+                result[i] = job.id;
+                slot[i] = true;
+                break;
+            }
+        }
+    }
+
+    // Print the scheduled jobs
+    cout << "Scheduled Jobs: ";
+    for (char id : result) {
+        cout << id << " ";
+    }
+    cout << endl;
+
+    // Calculate total profit
+    int totalProfit = 0;
+    for (int i = 0; i < maxDeadline; i++) {
+        if (result[i] != '-') {
+            totalProfit += jobs[result[i] - 'A'].profit;
+        }
+    }
+    cout << "Total Profit: " << totalProfit << endl;
+}
+
+int main() {
+    vector<Job> jobs = {
+        {'A', 2, 100},
+        {'B', 1, 19},
+        {'C', 2, 27},
+        {'D', 1, 25},
+        {'E', 3, 15}
+    };
+
+    jobScheduling(jobs);
+
+    return 0;
+}
+
+/*Sure, let's break down the code step by step:
+
+1. **Struct Definition** (`struct Job`):
+   - This defines a structure called `Job`, which represents each job in the scheduling problem.
+   - It has three attributes:
+     - `id`: Represents the job ID (character).
+     - `deadline`: Represents the deadline by which the job needs to be completed (integer).
+     - `profit`: Represents the profit earned by completing the job (integer).
+
+2. **Comparison Function** (`bool compare(Job a, Job b)`):
+   - This function compares two jobs based on their profits.
+   - It is used later for sorting the jobs in decreasing order of profit.
+
+3. **Job Scheduling Function** (`void jobScheduling(vector<Job>& jobs)`):
+   - This function takes a vector of jobs as input and schedules them to maximize profit.
+   - It first sorts the jobs in decreasing order of profit using the `compare` function.
+   - Then, it finds the maximum deadline among all jobs to determine the size of the time slots.
+   - It initializes two vectors:
+     - `result`: Stores the result of scheduled jobs (initially filled with dashes).
+     - `slot`: Stores the availability of time slots (initially all false).
+   - It iterates through each job and assigns it to the latest available time slot before its deadline.
+   - After scheduling all jobs, it prints the scheduled jobs and calculates the total profit earned.
+
+4. **Main Function**:
+   - It creates a vector of `Job` objects with sample job details.
+   - It calls the `jobScheduling` function with the vector of jobs as input.
+   - Finally, it returns 0 to indicate successful execution.
+
+5. **Sample Input and Output**:
+   - The sample input consists of job details like ID, deadline, and profit.
+   - The `jobScheduling` function schedules these jobs and prints the scheduled jobs along with the total profit earned.
+
+Overall, this code demonstrates a simple implementation of the job scheduling algorithm using a greedy approach, where jobs are scheduled based on their profits to maximize overall profit while meeting deadlines.
+
+ex
+Job scheduling algorithms are used to optimize the order of executing jobs to maximize certain objectives such as profit, efficiency, or meeting deadlines. One common approach is the greedy algorithm for job scheduling. Here's a simple outline of the algorithm:
+
+### Greedy Job Scheduling Algorithm:
+
+1. **Sort Jobs by Profit**: 
+   - Sort the jobs based on their profit in non-increasing order.
+
+2. **Initialize Time Slots**: 
+   - Initialize an array to represent time slots. The size of this array should be at least equal to the maximum deadline among all jobs.
+
+3. **Assign Jobs to Time Slots**:
+   - Iterate through the sorted jobs.
+   - For each job, find the latest available time slot before its deadline.
+   - If a time slot is available, assign the job to that time slot and mark the time slot as occupied.
+
+4. **Calculate Total Profit**:
+   - Calculate the total profit earned by summing up the profits of all scheduled jobs.
+
+5. **Output Scheduled Jobs and Total Profit**:
+   - Print or return the scheduled jobs along with their profits and the total profit earned.
+
+### Example:
+Consider the following set of jobs with their respective deadlines and profits:
+
+| Job ID | Deadline | Profit |
+|--------|----------|--------|
+|   J1   |    2     |   50   |
+|   J2   |    1     |   20   |
+|   J3   |    2     |   40   |
+|   J4   |    1     |   30   |
+|   J5   |    3     |   60   |
+
+After sorting by profit in non-increasing order, the job sequence will be: J5, J1, J3, J4, J2.
+
+If we initialize time slots from 1 to 3, we can assign jobs as follows:
+- J5 to time slot 3
+- J1 to time slot 2
+- J3 to time slot 1
+- J4 cannot be scheduled due to its deadline, and J2 is also not scheduled.
+
+The total profit earned will be 50 (J5) + 50 (J1) + 40 (J3) = 140.
+
+This is a high-level explanation of the greedy job scheduling algorithm. Specific implementations may vary based on factors such as the data structure used to represent jobs and time slots, as well as the details of how conflicts are resolved when multiple jobs have the same deadline.
+*/

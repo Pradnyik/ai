@@ -1,0 +1,161 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+#define INF INT_MAX
+
+// Define an edge structure to represent graph edges
+struct Edge {
+    int src, dest, weight;
+};
+
+// Define a function to find the MST using Prim's algorithm
+vector<Edge> primMST(vector<vector<pair<int, int>>>& graph) {
+    int V = graph.size();
+
+    // Priority queue to store vertices and their key values
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+    // Vector to store parent array which in turn store MST
+    vector<int> parent(V, -1);
+
+    // Vector to store key values used to pick minimum weight edge in cut
+    vector<int> key(V, INF);
+
+    // Vector to represent set of vertices included in MST
+    vector<bool> inMST(V, false);
+
+    // Insert source vertex into priority queue and initialize its key to 0
+    pq.push({0, 0});
+    key[0] = 0;
+
+    // Loop to construct MST
+    while (!pq.empty()) {
+        int u = pq.top().second;
+        pq.pop();
+
+        // Include vertex in MST
+        inMST[u] = true;
+
+        // Traverse all adjacent vertices of u
+        for (auto& neighbor : graph[u]) {
+            int v = neighbor.first;
+            int weight = neighbor.second;
+
+            // If v is not in MST and weight of (u,v) is smaller than current key of v
+            if (!inMST[v] && weight < key[v]) {
+                // Update parent and key of v
+                parent[v] = u;
+                key[v] = weight;
+                pq.push({key[v], v});
+            }
+        }
+    }
+
+    // Construct the MST using parent array
+    vector<Edge> MST;
+    for (int i = 1; i < V; ++i) {
+        MST.push_back({parent[i], i, key[i]});
+    }
+
+    return MST;
+}
+
+int main() {
+    int V, E;
+    cout << "Enter number of vertices and edges: ";
+    cin >> V >> E;
+
+    // Create a graph as an adjacency list
+    vector<vector<pair<int, int>>> graph(V);
+
+    cout << "Enter source, destination, and weight for each edge:\n";
+    for (int i = 0; i < E; ++i) {
+        int src, dest, weight;
+        cin >> src >> dest >> weight;
+        graph[src].push_back({dest, weight});
+        graph[dest].push_back({src, weight}); // For undirected graph
+    }
+
+    // Find the minimum spanning tree
+    vector<Edge> MST = primMST(graph);
+
+    // Output the MST
+    cout << "Edges in the Minimum Spanning Tree:\n";
+    for (auto& edge : MST) {
+        cout << edge.src << " - " << edge.dest << " : " << edge.weight << "\n";
+    }
+
+    return 0;
+}
+
+/*
+Enter number of vertices and edges: 6 9
+Enter source, destination, and weight for each edge:
+0 1 2
+0 2 3
+1 2 1
+1 3 4
+1 4 2
+2 3 5
+2 4 6
+3 4 7
+4 5 8
+Edges in the Minimum Spanning Tree:
+0 - 1 : 2
+1 - 2 : 1
+1 - 3 : 4
+1 - 4 : 2
+4 - 5 : 8
+
+
+This C++ code implements Prim's algorithm for finding the Minimum Spanning Tree (MST) of a graph. Here's a breakdown of how it works:
+
+1. **Input**: The program first takes input from the user for the number of vertices (`V`) and the number of edges (`E`). Then, it prompts the user to enter the source, destination, and weight for each edge.
+
+2. **Graph Representation**: The graph is represented using an adjacency list. Each vertex of the graph is associated with a vector of pairs, where each pair represents an edge connected to that vertex. The pair consists of the destination vertex and the weight of the edge.
+
+3. **Prims's Algorithm**: The `prims` function takes the graph and the starting vertex (`src`) as input and returns a vector of pairs representing the edges of the MST. It initializes an empty priority queue (`pq`) to store vertices and their corresponding weights.
+
+4. **Initialization**: The distance of all vertices from the source is set to infinity (`INF`), except for the source vertex itself, which is set to 0. A boolean array `visited` is used to keep track of visited vertices.
+
+5. **Main Loop**: The algorithm iterates while the priority queue is not empty. In each iteration, it extracts the vertex with the minimum weight from the priority queue. If the vertex has already been visited, it skips to the next iteration.
+
+6. **Updating Distances**: For each neighboring vertex of the extracted vertex, the algorithm updates the distance if the weight of the edge to that neighbor is smaller than the current distance. If the distance is updated, the vertex is pushed into the priority queue.
+
+7. **Output**: After the algorithm completes, the vector of pairs representing the edges of the MST is returned.
+
+8. **Main Function**: In the `main` function, the user inputs the graph information, including the number of vertices, edges, and edge weights. Then, the `prims` function is called with the graph and the source vertex. Finally, the edges of the MST are printed.
+
+Overall, the code efficiently constructs the Minimum Spanning Tree using Prim's algorithm and provides the edges of the MST as output.
+
+ex
+Prim's algorithm is a greedy algorithm used to find the Minimum Spanning Tree (MST) of a connected, undirected graph. Here's a breakdown of how it works:
+
+1. **Input**: The algorithm takes as input a weighted, connected graph represented in the form of an adjacency list or an adjacency matrix. It also requires a starting vertex to begin the construction of the MST.
+
+2. **Initialization**: 
+   - Create an empty priority queue (min-heap) to store vertices and their corresponding weights. Initially, all vertices are considered to be at an infinite distance from the MST.
+   - Choose a starting vertex and set its distance to 0.
+
+3. **Main Loop**: 
+   - Repeat the following steps until all vertices are included in the MST:
+     - Extract the vertex with the minimum distance from the priority queue.
+     - Mark the extracted vertex as visited.
+     - Update the distances of its neighboring vertices if they are not visited and if the edge weight connecting them is smaller than their current distance.
+     - Add the neighboring vertices with updated distances to the priority queue.
+
+4. **Output**: 
+   - After the main loop completes, the algorithm constructs the MST, and the edges of the MST can be obtained from the distances and parent pointers maintained during the process.
+
+5. **Time Complexity**:
+   - The time complexity of Prim's algorithm using a priority queue is O(E log V), where E is the number of edges and V is the number of vertices in the graph. This is because the priority queue operations dominate the time complexity.
+
+Overall, Prim's algorithm efficiently constructs the Minimum Spanning Tree by greedily selecting the edge with the smallest weight at each step, ensuring that the tree spans all vertices while minimizing the total edge weight.
+*/
+
+
+=== Code Execution Successful ===
